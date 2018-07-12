@@ -29,7 +29,7 @@ The content of the buffer is undefined after this.
 void yalloc_deinit(void * pool);
 
 /**
-Allcates a block of memory from a pool.
+Allocates a block of memory from a pool.
 
 This function mimics malloc().
 
@@ -39,20 +39,20 @@ The pool must not be in the "defragmenting" state when this function is called.
 @param size Number of bytes to allocate.
 @return Allocated buffer or \c NULL if there was no free range that could serve
 the allocation. See @ref yalloc_defrag_start() for a way to remove
-fragmentation which may cause allocations to fail even when there is enoogh
+fragmentation which may cause allocations to fail even when there is enough
 space in total.
 */
 void * yalloc_alloc(void * pool, size_t size);
 
 /**
-Returns an allocaton to a pool.
+Returns an allocation to a pool.
 
 This function mimics free().
 
 The pool must not be in the "defragmenting" state when this function is called.
 
 @param pool The starting address of the initialized pool the allocation comes from.
-@param p An address that was returnd from yalloc_alloc() of the same pool.
+@param p An address that was returned from yalloc_alloc() of the same pool.
 */
 void yalloc_free(void * pool, void * p);
 
@@ -70,7 +70,7 @@ size_t yalloc_count_free(void * pool);
 Queries the usable size of an allocated block.
 
 @param pool The starting address of the initialized pool the allocation comes from.
-@param p An address that was returnd from yalloc_alloc() of the same pool.
+@param p An address that was returned from yalloc_alloc() of the same pool.
 @return Size of the memory block. This is the size passed to @ref yalloc_alloc() rounded up to 4.
 */
 size_t yalloc_block_size(void * pool, void * p);

@@ -1,7 +1,7 @@
 # Summary
 
-yalloc is a memory effcient allocator which is intended for embedded
-applications that only have a low amount of RAM and want to maxize its
+yalloc is a memory efficient allocator which is intended for embedded
+applications that only have a low amount of RAM and want to maximize its
 utilization. Properties of the allocator:
 
  - pools can be up to 128k
@@ -17,7 +17,7 @@ utilization. Properties of the allocator:
 
 This feature was the initial motivation for this implementation. Especially
 when dealing with highly memory constrained environments fragmenting memory
-pools can be annoying. For this reason this implemenation supports
+pools can be annoying. For this reason this implementation supports
 defragmentation which moves all allocated blocks into a contiguous range at the
 beginning of the pool, leaving a maximized free range at the end.
 
@@ -30,17 +30,17 @@ the references, the application must do so. This is done in three steps:
 
  2. yalloc_defrag_address() is called by the application for every pointer that
     points to an allocation. It returns the post-defragmentation-address for
-    the allocation. The applicaton must update all its relevant pointers this
+    the allocation. The application must update all its relevant pointers this
     way. Care must be taken not not yet dereference that moved pointers. If the
-    application woks with hierachical data then this can easily be done by
-    updating the pointers buttom up (first the leafs then their parents).
+    application works with hierarchical data then this can easily be done by
+    updating the pointers button up (first the leafs then their parents).
 
  3. yalloc_defrag_commit() is called to finally perform the defragmentation.
     All allocated blocks are moved to their post-defragmentation-address and
     the application can continue using the pool the normal way.
 
 It is up to the application when (and if) it performs defragmentation. One
-strategy would be to delay it until an allocation failure. Anotehr approch
+strategy would be to delay it until an allocation failure. Another approach
 would be to perform the defragmentation regularly when there is nothing else to
 do.
 
@@ -62,7 +62,7 @@ YALLOC_VALGRIND
 
 If this is defined in yalloc.c and NVALGRIND is not defined then
 valgrind/memcheck.h is included and the the allocator functions tell valgrind
-about the pool, the allcations and makes the block headers inaccessible outside
+about the pool, the allocations and makes the block headers inaccessible outside
 of yalloc-functions. This allows valgrind to detect a lot of the accidents that
 can happen when dealing dynamic memory. This also adds some overhead for every
 yalloc-call because most of them will "unprotect" the internal structure on
@@ -72,7 +72,7 @@ returning.
 # Tests
 
 The tests rely on internal validation of the pool (see INTERNAL_VALIDATE) to
-check that no of the assuptions about the internal structure of the pool are
+check that no of the assumptions about the internal structure of the pool are
 violated. They additionally check for correctness of observations that can be
 made by using the public functions of the allocator (like checking if user data
 stays unmodified). There are a few different scripts that run tests:
@@ -82,7 +82,7 @@ stays unmodified). There are a few different scripts that run tests:
    shown at the end of the test.
 
  - run_valgrind.sh tests if the valgrind integration is working as expected,
-   runs the functiosn from the coverage test and some randomly generated
+   runs the functions from the coverage test and some randomly generated
    testcases under valgrind.
 
  - run_libfuzzer.sh uses libfuzzer from clang to generate interesting testcases
@@ -90,7 +90,7 @@ stays unmodified). There are a few different scripts that run tests:
    coverage data at the end (it always got 100% coverage in my testruns).
 
 All tests exit with 0 and print "All fine!" at the end if there where no
-errors. Coverage deficites is not counted as error, so you have to look at the
+errors. Coverage deficits are not counted as error, so you have to look at the
 summary (they should show 100% coverage!).
 
 
@@ -99,7 +99,7 @@ summary (they should show 100% coverage!).
 The Headers and the user data are 32bit aligned. Headers have two 16bit fields
 where the high 15 bits represent offsets (relative to the pools address) to the
 previous/next block. The macros HDR_PTR() and HDR_OFFSET() are used to
-translate an offset to an address and back. The 32bit alignemnt is exploited to
+translate an offset to an address and back. The 32bit alignment is exploited to
 allow pools of up to 128k with that 15 significant bits.
 
 A pool is always occupied by non-overlapping blocks that link to their
