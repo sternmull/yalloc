@@ -1,3 +1,9 @@
+/**
+@file
+
+API of the yalloc allocator.
+*/
+
 #ifndef YALLOC_H
 #define YALLOC_H
 
@@ -62,12 +68,12 @@ The pool must not be in the "defragmenting" state when this function is called.
 void yalloc_free(void * pool, void * p);
 
 /**
-Returns the maximal size of a successful allocation (assuming a completely unfragmented heap).
+Returns the maximum size of a successful allocation (assuming a completely unfragmented heap).
 
 After defragmentation the first allocation with the returned size is guaranteed to succeed.
 
 @param pool The starting address of an initialized pool.
-@return Number of byte that can be allocated (assuming the pool is defragmented).
+@return Number of bytes that can be allocated (assuming the pool is defragmented).
 */
 size_t yalloc_count_free(void * pool);
 
@@ -102,7 +108,7 @@ void * yalloc_next_used(void * pool, void * p);
 Starts defragmentation for a pool.
 
 Allocations will stay where they are. But the pool is put in the "defagmenting"
-state (@see yalloc_defrag_in_progress()).
+state (see @ref yalloc_defrag_in_progress()).
 
 The pool must not be in the "defragmenting" state when this function is called.
 The pool is put into the "defragmenting" state by this function.
