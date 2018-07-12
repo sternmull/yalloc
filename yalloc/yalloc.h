@@ -13,7 +13,12 @@ Creates a pool inside a given buffer.
 
 Pools must be deinitialized with yalloc_deinit() when they are no longer needed.
 
-@param pool The starting address of the pool. This is typically static memory, or an array on the stack if the pool is only used temporarily.
+@param pool The starting address of the pool. It must have at least 16bit
+alignment (internal structure uses 16bit integers). Allocations are placed at
+32bit boundaries starting from this address, so if the user data should be
+32bit aligned then this address has to be 32bit aligned. Typically an address
+of static memory, or an array on the stack is used if the pool is only used
+temporarily.
 @param size Size of the pool.
 @return 0 on success, nonzero if the size is not supported.
  */
