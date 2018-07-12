@@ -3,61 +3,6 @@
 #include <assert.h>
 #include <string.h>
 
-/*
-
-Structure of a pool:
-
-The Headers and the user data are 32bit aligned. Headers have two 16bit fields
-where the high 15 bits represent offsets (relative to the pools address) to the
-previous/next block. The macros HDR_PTR() and HDR_OFFSET() are used to
-translate an offset to an address and back. The 32bit alignemnt is exploited to
-allow pools of up to 128k with their 15 significant bits.
-
-A pool is always occupied by non-overlapping blocks that link to their
-previous/next block in address order via the prev/next field of Header.
-
-Free blocks are always joined: No two free blocks will ever be neighbors.
-
-Free blocks have an additional header of the same structure. This additional
-header is used to build a list of free blocks (independent of their address
-order).
-
-yalloc_free() will insert the freed block to the front of the free list.
-yalloc_alloc() searches that list front to back and takes the first block that
-is big enough to satisfy the allocation.
-
-There is always a Header at the front and at the end of the pool. The Header at
-the end is degenerate: It is marked as "used" but has no next block (which is
-usually used to determine the size of a block).
-
-The prev-field of the very first block in the pool has special meaning: It
-points to the first free block in the pool. Or, if the pool is currently
-defragmenting (after yalloc_defrag_start() and before yalloc_defrag_commit()),
-points to the last header of the pool. This can be recognized by checking if it
-points to an empty block (normal pool state) or a used block (defragmentation
-in progress). This logic can be seen in yalloc_defrag_in_progress().
-
-The lowest bit of next/prev have special meaning:
-
- - low bit of prev is set for free blocks
-
- - low bit of next is set for blocks with 32bit padding after the user data.
-   This is needed when a block is allocated from a free block that leaves only
-   4 free bytes after the user data... which is not enough to insert a
-   free-heaer (which is needs 8 bytes). The padding will be reclaimed when that
-   block is freed or when the pool is defragmented. The predicate isPadded()
-   can be used to test if a block is padded. Free blocks are never padded.
-
-The predicate isNil() can be used to test if an offset points nowhere (it tests
-if all 15 high bits of an offset are 1). The constant NIL has all but the
-lowest bit set. It is used to set offsets to point to nowhere, and in some
-places it is used to mask out the actual address bits of an offset. This should
-be kept in mind when modifying the code and updating prev/next: Think carefully
-if you have to preserve the low bit when updating an offset!
-
-The
-
-*/
 
 #if defined(YALLOC_VALGRIND) && !defined(NVALGRIND)
 # define USE_VALGRIND 1
