@@ -54,9 +54,10 @@ validation when NDEBUG is not defined then define INERNAL_VALIDATE as 0 on the
 compiler commandline.
 
 If it is nonzero the heap will be validated via a bunch of assert() calls at
-the end of every function that modifies the heap. This has roughly O(N*N)
-overhead where N is the number of allocated blocks in a heap. For applications
-with enough live allocations this will get significant.
+the end of every function that modifies the heap. This has roughly O(N*M)
+overhead where N is the number of allocated blocks and M the number of free
+blocks in a heap. For applications with enough live allocations this will get
+significant.
 
 YALLOC_VALGRIND
 
@@ -72,7 +73,7 @@ returning.
 # Tests
 
 The tests rely on internal validation of the pool (see INTERNAL_VALIDATE) to
-check that no of the assumptions about the internal structure of the pool are
+check that no assumptions about the internal structure of the pool are
 violated. They additionally check for correctness of observations that can be
 made by using the public functions of the allocator (like checking if user data
 stays unmodified). There are a few different scripts that run tests:
